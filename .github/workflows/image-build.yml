@@ -1,0 +1,17 @@
+name: 'github action for airflow image build'
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  pull_request:
+    types:
+      - closed
+jobs:
+  image_build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo The PR was merged
+        ls
