@@ -8,10 +8,11 @@ on:
     types:
       - closed
 jobs:
-  image_build:
+  image_processing:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
+    - name: Image Build
     - run: |
-        echo $(pwd)
-        echo $(ls)
+        docker build -f airflow-service/Dockerfile -t coolcool97/airflow:2.4.3-python3.7
+        docker build -f airflow-service/Dockerfile -t coolcool97/airflow:slim-2.4.3-python3.7
