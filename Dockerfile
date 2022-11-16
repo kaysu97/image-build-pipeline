@@ -6,5 +6,5 @@ RUN apt-get update \
   && apt-get autoremove -yqq --purge \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+RUN pip install -r requirements.txt --no-cache-dir
 USER airflow
-RUN pip3 install --no-cache-dir -r requirements.txt
