@@ -18,7 +18,7 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     env:
-      AIRFLOW_WORKER_IMAGE_TAG: slim-$AIRFLOW_IMAGE_TAG
+      AIRFLOW_WORKER_IMAGE_TAG: slim-${{ env.AIRFLOW_IMAGE_TAG }}
     steps:
       - uses: actions/checkout@v3
       - name: Image Build
