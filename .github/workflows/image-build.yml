@@ -11,14 +11,12 @@ on:
 env:
   IMAGE_REGISTRY: coolcool97/airflow
   AIRFLOW_IMAGE_TAG: 2.4.3-python3.7
-  
+  AIRFLOW_WORKER_IMAGE_TAG: slim-2.4.3-python3.7
 
 jobs:
   image_processing:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    env:
-      AIRFLOW_WORKER_IMAGE_TAG: slim-${{ env.AIRFLOW_IMAGE_TAG }}
     steps:
       - uses: actions/checkout@v3
       - name: Image Build
