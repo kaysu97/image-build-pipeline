@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "image-biuld/**"
+      - "image-build/**"
   # pull_request:
   #   types:
   #     - closed
