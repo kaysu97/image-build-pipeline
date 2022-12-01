@@ -34,7 +34,7 @@ jobs:
             echo "$dockerfile"
             airflow_tag=`echo ${strarr[*]::2} | sed 's/ /-/g'`
             echo "$airflow_tag"
-            docker build -f docker/"$dockerfile" -t $IMAGE_REGISTRY:$image_tag . --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
+            docker build -f "$dockerfile" -t $IMAGE_REGISTRY:$image_tag ./docker --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
             # docker push $IMAGE_REGISTRY:$image_tag
           done < $filename
       
