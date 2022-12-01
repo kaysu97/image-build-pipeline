@@ -9,6 +9,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 USER airflow
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt --no-cache-dir
+COPY base-requirements.txt .
+RUN pip install -r base-requirements.txt --no-cache-dir
 RUN cd / && rm -rf /app 

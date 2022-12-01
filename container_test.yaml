@@ -1,0 +1,14 @@
+schemaVersion: 2.0.0
+commandTests:
+  - name: "airflow scheduler health check"
+    command: "bash"
+    args:
+      - -c
+      - |
+         nodejs --version
+  - name: "Check that serverless is working"
+      command: "bash"
+      args:
+        - -c
+        - |
+          serverless --version

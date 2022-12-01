@@ -1,5 +1,5 @@
 ARG  AIRFLOW_IMAGE_TAG=AIRFLOW_IMAGE_TAG
-FROM apache/airflow:${AIRFLOW_IMAGE_TAG}
+FROM apache/airflow:slim-${AIRFLOW_IMAGE_TAG}
 USER root
 RUN apt-get update \
   && apt-get install -y libldap2-dev libsasl2-dev libspatialindex-dev \
@@ -9,6 +9,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 USER airflow
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt --no-cache-dir
+COPY slim-base-requirements.txt .
+RUN pip install -r slim-base-requirements.txt --no-cache-dir
 RUN cd / && rm -rf /app 
