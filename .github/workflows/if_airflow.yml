@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Base Image Build and Push
+      - name: Base Image Build
         run: |
           ls
           filename='base_image_list.txt'
@@ -34,8 +34,8 @@ jobs:
             echo "$dockerfile"
             airflow_tag=`echo ${strarr[*]::2} | sed 's/ /-/g'`
             echo "$airflow_tag"
-            docker build -f docker/"$dockerfile" -t $IMAGE_REGISTRY:$image_tag --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
-            docker push $IMAGE_REGISTRY:$image_tag
+            docker build -f ./docker/"$dockerfile" -t $IMAGE_REGISTRY:$image_tag --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
+            # docker push $IMAGE_REGISTRY:$image_tag
           done < $filename
       
       # - name: test image
