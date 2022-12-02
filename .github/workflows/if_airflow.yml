@@ -59,7 +59,7 @@ jobs:
   example_matrix:
     strategy:
       matrix:
-        image_tag: [airflow:2.4.3-python3.7-base-v1, airflow:2.4.3-python3.7-slim-base-v1]
+        image_tag: ["airflow:2.4.3-python3.7-base-v1", "airflow:2.4.3-python3.7-slim-base-v1"]
     runs-on: ubuntu-latest
 
     steps:
