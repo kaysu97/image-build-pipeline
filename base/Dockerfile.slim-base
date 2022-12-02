@@ -11,4 +11,6 @@ USER airflow
 WORKDIR /app
 COPY slim-base-requirements.txt .
 RUN pip install -r slim-base-requirements.txt --no-cache-dir
-RUN cd / && rm -rf /app 
+USER root
+RUN cd / && rm -rf /app
+USER airflow

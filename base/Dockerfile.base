@@ -11,4 +11,6 @@ USER airflow
 WORKDIR /app
 COPY base-requirements.txt .
 RUN pip install -r base-requirements.txt --no-cache-dir
-RUN cd / && rm -rf /app 
+USER root
+RUN cd / && rm -rf /app
+USER airflow
