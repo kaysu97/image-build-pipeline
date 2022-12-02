@@ -4,25 +4,15 @@ FROM apache/airflow:slim-${AIRFLOW_IMAGE_TAG} AS airflow_base
 USER root
 RUN apt-get update \
   && apt-get install -y libldap2-dev libsasl2-dev libspatialindex-dev \
-     gcc g++ slapd ldap-utils tox lcov valgrind libspatialindex6 libspatialindex-c6 python3-dev libpq-dev lftp \
+     gcc g++ slapd ldap-utils tox lcov valgrind libspatialindex6 libspatialindex-c6 \
+     python3-dev libpq-dev lftp \
+  && if [ ${PYTHON_VERSION} = "python3.9" ]; then \
+      apt-get install -y librdkafka-dev; \
+    fi \
   && apt-get autoremove -yqq --purge \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-
-FROM airflow_base as ${PYTHON_VERSION}-install
-# Dummy base
-
-
-FROM airflow_base as python3.9-install
-RUN apt-get update \
-  && apt-get install -y librdkafka-dev \
-  && apt-get autoremove -yqq --purge \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-
-
-FROM ${PYTHON_VERSION}-install
 USER airflow
 WORKDIR /app
 COPY slim-base-requirements.txt .
