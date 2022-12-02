@@ -26,6 +26,7 @@ jobs:
         working-directory: base
         run: |
           echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_OUTPUT
+          echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_ENV
       - run: |
           echo "image_list: $image_list"
           
@@ -36,7 +37,6 @@ jobs:
     strategy:
       matrix:
         image_tag: ${{fromJSON(needs.Generate_Image_Tag.outputs.image_list)}}
-        # image_tag: ["airflow:2.4.3-python3.7-base-v1", "airflow:2.4.3-python3.8-base-v1", "airflow:2.4.3-python3.9-base-v1", "airflow:2.4.3-python3.7-slim-base-v1", "airflow:2.4.3-python3.8-slim-base-v1", "airflow:2.4.3-python3.9-slim-base-v1"]
     runs-on: ubuntu-latest
 
     steps:
