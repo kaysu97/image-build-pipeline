@@ -26,7 +26,6 @@ jobs:
         working-directory: base
         run: |
           echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_OUTPUT
-          echo "image list: $image_list"
           
           
 
@@ -40,6 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Generate ${{ matrix.image_tag }} Image Variables
+        id: gen-image-vars
         working-directory: base
         run: |
           ls
@@ -54,8 +54,12 @@ jobs:
           echo "airflow_tag=$(echo ${strarr[*]::2} | sed 's/ /-/g')" >> $GITHUB_ENV
           echo "airflow tag: $airflow_tag"
           echo "image tag: ${{ matrix.image_tag }}"
-          
+      - run: |
+          echo "dockerfile name: ${{ env.dockerfile }}"
+          echo "airflow tag: ${{ env.airflow_tag }}"
+
       - name: ${{ matrix.image_tag }} Image Build
+        id: image-build
         working-directory: base
         run: |
           docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}" \
@@ -71,7 +75,7 @@ jobs:
       #     vuln-type: 'os,library'
       #     severity: 'CRITICAL,HIGH'
 
-      - name: Login to Docker Hub ${{ env.IMAGE_REGISTRY }} Registry
+      - name: Login to Docker Hub Registry
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -79,6 +83,7 @@ jobs:
 
 
       - name: ${{ matrix.image_tag }} Image Push
+        id: image-push
         working-directory: base
         run: |
           docker push "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}"
