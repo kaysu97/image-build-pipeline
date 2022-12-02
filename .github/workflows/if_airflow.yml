@@ -39,7 +39,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Generate ${{ matrix.image_tag }} Image Variables
-        id: gen-image-vars
         working-directory: base
         run: |
           ls
@@ -49,7 +48,7 @@ jobs:
           len=$((${#strarr[*]}-3))
           sep_arr=${strarr[*]:2:len}
           file_name=$(echo "$sep_arr" | sed 's/ /-/g')
-          echo "dockerfile='Dockerfile.$file_name'" >> $GITHUB_ENV
+          #echo "dockerfile=Dockerfile.$file_name" >> $GITHUB_ENV
           echo "dockerfile name: $dockerfile"
           echo "airflow_tag=$(echo ${strarr[*]::2} | sed 's/ /-/g')" >> $GITHUB_ENV
           echo "airflow tag: $airflow_tag"
@@ -59,7 +58,6 @@ jobs:
           echo "airflow tag: ${{ env.airflow_tag }}"
 
       - name: ${{ matrix.image_tag }} Image Build
-        id: image-build
         working-directory: base
         run: |
           docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}" \
@@ -83,7 +81,6 @@ jobs:
 
 
       - name: ${{ matrix.image_tag }} Image Push
-        id: image-push
         working-directory: base
         run: |
           docker push "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}"
