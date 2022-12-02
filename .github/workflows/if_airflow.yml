@@ -65,8 +65,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Base Image Build
-        with:
-          image_tag: ${{ matrix.image_tag }}
+        # with:
+        #   image_tag: ${{ matrix.image_tag }}
         working-directory: base
         run: |
           ls
