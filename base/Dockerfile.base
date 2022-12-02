@@ -1,5 +1,5 @@
 ARG  AIRFLOW_IMAGE_TAG=AIRFLOW_IMAGE_TAG
-FROM apache/airflow:${AIRFLOW_IMAGE_TAG}
+FROM apache/${AIRFLOW_IMAGE_TAG}
 USER root
 RUN apt-get update \
   && apt-get install -y libldap2-dev libsasl2-dev libspatialindex-dev \

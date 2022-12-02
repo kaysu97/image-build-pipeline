@@ -32,11 +32,12 @@ jobs:
             sep_arr=${strarr[*]:2:len}
             file_name=`echo "$sep_arr" | sed 's/ /-/g'`
             dockerfile="Dockerfile.$file_name"
-            echo "$dockerfile"
+            echo "dockerfile name: $dockerfile"
             airflow_tag=`echo ${strarr[*]::2} | sed 's/ /-/g'`
-            echo "$airflow_tag"
-            docker build . -f "$dockerfile" -t $IMAGE_REGISTRY:$image_tag --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
-            # docker push $IMAGE_REGISTRY:$image_tag
+            echo "airflow tag: $airflow_tag"
+            echo "image tag: $image_tag"
+            docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"$image_tag" --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
+            # docker push $IMAGE_REGISTRY/$image_tag
           done < $filename
       
       # - name: test image
