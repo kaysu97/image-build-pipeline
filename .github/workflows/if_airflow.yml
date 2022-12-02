@@ -9,48 +9,41 @@ on:
   #     - closed
 
 env:
-  IMAGE_REGISTRY: coolcool97/airflow
+  IMAGE_REGISTRY: coolcool97
   # AIRFLOW_IMAGE_TAG: 2.4.3-python3.7
   # AIRFLOW_VERSION: 2.4.3
   # AIRFLOW_WORKER_IMAGE_TAG: slim-2.4.3-python3.7
 
 jobs:
-  image_build_push:
-    # if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Base Image Build
-        working-directory: base
-        run: |
-          ls
-          filename='base_image_list.txt'
-          IFS='-'
-          while read image_tag || [ -n "$image_tag" ]; do
-            read -a strarr <<< "$image_tag"
-            len=$((${#strarr[*]}-3))
-            sep_arr=${strarr[*]:2:len}
-            file_name=`echo "$sep_arr" | sed 's/ /-/g'`
-            dockerfile="Dockerfile.$file_name"
-            echo "dockerfile name: $dockerfile"
-            airflow_tag=`echo ${strarr[*]::2} | sed 's/ /-/g'`
-            echo "airflow tag: $airflow_tag"
-            echo "image tag: $image_tag"
-            docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"$image_tag" --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
-            # docker push $IMAGE_REGISTRY/$image_tag
-          done < $filename
+  # image_build_push:
+  #   # if: github.event.pull_request.merged == true
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Base Image Build
+  #       working-directory: base
+  #       run: |
+  #         ls
+  #         filename='base_image_list.txt'
+  #         IFS='-'
+  #         while read image_tag || [ -n "$image_tag" ]; do
+  #           read -a strarr <<< "$image_tag"
+  #           len=$((${#strarr[*]}-3))
+  #           sep_arr=${strarr[*]:2:len}
+  #           file_name=`echo "$sep_arr" | sed 's/ /-/g'`
+  #           dockerfile="Dockerfile.$file_name"
+  #           echo "dockerfile name: $dockerfile"
+  #           airflow_tag=`echo ${strarr[*]::2} | sed 's/ /-/g'`
+  #           echo "airflow tag: $airflow_tag"
+  #           echo "image tag: $image_tag"
+  #           docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"$image_tag" --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
+  #           # docker push $IMAGE_REGISTRY/$image_tag
+  #         done < $filename
       
       # - name: test image
       #   run: |
       #     curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64 && chmod +x container-structure-test-linux-amd64 && mkdir -p $HOME/bin && export PATH=$PATH:$HOME/bin && mv container-structure-test-linux-amd64 $HOME/bin/container-structure-test
       #     container-structure-test test --image $IMAGE_REGISTRY:$AIRFLOW_IMAGE_TAG --config container_test.yaml
-
-      # - name: Scan image
-      #   uses: Google/container-scan@xxx
-      #   with:
-      #     image-name: xxx
-      #     severity-threshold: CRITICAL
-      #     run-quality-checks: true  
 
       # - name: Login to Docker Hub
       #   uses: docker/login-action@v2
@@ -62,3 +55,30 @@ jobs:
       #   run: |
       #     docker push $IMAGE_REGISTRY:$AIRFLOW_IMAGE_TAG
       #     docker push $IMAGE_REGISTRY:$AIRFLOW_WORKER_IMAGE_TAG
+
+  example_matrix:
+    strategy:
+      matrix:
+        image_tag: [airflow:2.4.3-python3.7-base-v1, airflow:2.4.3-python3.7-slim-base-v1]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Base Image Build
+        with:
+          image_tag: ${{ matrix.image_tag }}
+        working-directory: base
+        run: |
+          ls
+          IFS='-'
+          read -a strarr <<< "${{ matrix.image_tag }}"
+          len=$((${#strarr[*]}-3))
+          sep_arr=${strarr[*]:2:len}
+          file_name=`echo "$sep_arr" | sed 's/ /-/g'`
+          dockerfile="Dockerfile.$file_name"
+          echo "dockerfile name: $dockerfile"
+          airflow_tag=`echo ${strarr[*]::2} | sed 's/ /-/g'`
+          echo "airflow tag: $airflow_tag"
+          echo "image tag: $image_tag"
+          docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"$image_tag" --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
+          # docker push $IMAGE_REGISTRY/$image_tag
