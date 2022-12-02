@@ -34,7 +34,7 @@ jobs:
     needs: Generate_Image_Tag
     strategy:
       matrix:
-        image_tag: ${{needs.Generate_Image_Tag.outputs.image_list}}
+        image_tag: ${{fromJSON(needs.Generate_Image_Tag.outputs.image_list)}}
     runs-on: ubuntu-latest
 
     steps:
