@@ -53,9 +53,9 @@ jobs:
           file_name=$(echo "$sep_arr" | sed 's/ /-/g')
           echo "::set-env name=dockerfile::"Dockerfile.$file_name""
           #echo "dockerfile=Dockerfile.$file_name" >> $GITHUB_ENV
-          echo "dockerfile name: $dockerfile"
-          echo "airflow_tag=$(echo ${strarr[*]::2} | sed 's/ /-/g')" >> $GITHUB_ENV
-          echo "airflow tag: $airflow_tag"
+          #echo "dockerfile name: $dockerfile"
+          #echo "airflow_tag=$(echo ${strarr[*]::2} | sed 's/ /-/g')" >> $GITHUB_ENV
+          #echo "airflow tag: $airflow_tag"
           echo "image tag: ${{ matrix.image_tag }}"
       - run: |
           echo "dockerfile name: ${{ env.dockerfile }}"
