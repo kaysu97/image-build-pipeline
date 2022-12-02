@@ -15,24 +15,22 @@ env:
   # AIRFLOW_WORKER_IMAGE_TAG: slim-2.4.3-python3.7
 
 jobs:
-  Generate_Image_Tag:
-    runs-on: ubuntu-latest
-    outputs:
-      image_list: ${{ steps.set-image-tag-matrix.outputs.image_list }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Read Image Tag List
-        id: set-image-tag-matrix
-        working-directory: base
-        run: |
-          echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_OUTPUT
-          echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_ENV
-          echo "dockerfile=Dockerfile" >> $GITHUB_ENV
-      - run: |
-          echo "image_list: $image_list"
+  # Generate_Image_Tag:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     image_list: ${{ steps.set-image-tag-matrix.outputs.image_list }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Read Image Tag List
+  #       id: set-image-tag-matrix
+  #       working-directory: base
+  #       run: |
+  #         echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_OUTPUT
+  #         echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_ENV
+  #         echo "dockerfile=Dockerfile" >> $GITHUB_ENV
+  #     - run: |
+  #         echo "image_list: $image_list"
           
-          
-
   Base_Image_Build_Push:
     # needs: Generate_Image_Tag
     # strategy:
