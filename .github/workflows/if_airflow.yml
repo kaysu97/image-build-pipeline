@@ -33,6 +33,7 @@ jobs:
   Base_Image_Build_Push:
     needs: Generate_Image_Tag
     strategy:
+      fail-fast: false
       matrix:
         image_tag: ${{fromJSON(needs.Generate_Image_Tag.outputs.image_list)}}
     runs-on: ubuntu-latest
