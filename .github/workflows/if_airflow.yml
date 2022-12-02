@@ -15,57 +15,50 @@ env:
   # AIRFLOW_WORKER_IMAGE_TAG: slim-2.4.3-python3.7
 
 jobs:
-  # Generate_Image_Tag:
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     image_list: ${{ steps.set-image-tag-matrix.outputs.image_list }}
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Read Image Tag List
-  #       id: set-image-tag-matrix
-  #       working-directory: base
-  #       run: |
-  #         echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_OUTPUT
-  #         echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_ENV
-  #         echo "dockerfile=Dockerfile" >> $GITHUB_ENV
-  #     - run: |
-  #         echo "image_list: $image_list"
+  Generate_Image_Tag:
+    runs-on: ubuntu-latest
+    outputs:
+      image_list: ${{ steps.set-image-tag-matrix.outputs.image_list }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Read Image Tag List
+        id: set-image-tag-matrix
+        working-directory: base
+        run: |
+          echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_OUTPUT
+          echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_ENV
+      - run: |
+          echo "image_list: $image_list"
           
   Base_Image_Build_Push:
-    # needs: Generate_Image_Tag
-    # strategy:
-    #   matrix:
-    #     image_tag: ${{fromJSON(needs.Generate_Image_Tag.outputs.image_list)}}
+    needs: Generate_Image_Tag
+    strategy:
+      matrix:
+        image_tag: ${{fromJSON(needs.Generate_Image_Tag.outputs.image_list)}}
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-      - name: Generate airflow:2.4.3-python3.7-base-v1 Image Variables
-        id: a
+      - name: Generate ${{ matrix.image_tag }} Image Variables
         run: |
-          #ls
-          #IFS='-'
-          echo "dockerfile1=Dockerfile" >> $GITHUB_ENV
-          #read -a strarr <<< "airflow:2.4.3-python3.7-base-v1"
-          #echo "${{ matrix.image_tag }}"
-          #len=$((${#strarr[*]}-3))
-          #sep_arr=${strarr[*]:2:len}
-          #file_name=$(echo "$sep_arr" | sed 's/ /-/g')
-          #echo "dockerfile="Dockerfile.$file_name"" >> $GITHUB_ENV 
-          #echo "dockerfile=Dockerfile.$file_name" >> $GITHUB_ENV
-          #echo "dockerfile name: $dockerfile"
-          #echo "airflow_tag=$(echo ${strarr[*]::2} | sed 's/ /-/g')" >> $GITHUB_ENV
-          #echo "airflow tag: $airflow_tag"
+          ls
+          echo "image tag: ${{ matrix.image_tag }}"
+          strarr=($(echo "${{ matrix.image_tag }}" | sed 's/-/ /g'))
+          len=$((${#strarr[*]}-3))
+          sep_arr=${strarr[*]:2:len}
+          file_name=$(echo "$sep_arr" | sed 's/ /-/g')
+          echo "dockerfile=Dockerfile.$file_name" >> $GITHUB_ENV 
+          echo "airflow_tag=$(echo ${strarr[*]::2} | sed 's/ /-/g')" >> $GITHUB_ENV
           echo "image tag: ${{ matrix.image_tag }}"
       - run: |
           echo "dockerfile name: ${{ env.dockerfile1 }}"
           echo "airflow tag: ${{ env.airflow_tag }}"
 
-      # - name: ${{ matrix.image_tag }} Image Build
-      #   working-directory: base
-      #   run: |
-      #     docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}" \
-      #     --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
+      - name: ${{ matrix.image_tag }} Image Build
+        working-directory: base
+        run: |
+          docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}" \
+          --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
 
       # - name: Run Trivy vulnerability scanner
       #   uses: aquasecurity/trivy-action@master
@@ -84,7 +77,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
 
-      # - name: ${{ matrix.image_tag }} Image Push
-      #   working-directory: base
-      #   run: |
-      #     docker push "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}"
+      - name: ${{ matrix.image_tag }} Image Push
+        working-directory: base
+        run: |
+          docker push "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}"
