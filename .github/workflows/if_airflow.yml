@@ -34,28 +34,29 @@ jobs:
 
   Base_Image_Build_Push:
     needs: Generate_Image_Tag
-    # strategy:
-    #   matrix:
-    #     image_tag: ${{fromJSON(needs.Generate_Image_Tag.outputs.image_list)}}
+    strategy:
+      matrix:
+        image_tag: ${{fromJSON(needs.Generate_Image_Tag.outputs.image_list)}}
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-      - name: Generate airflow:2.4.3-python3.7-base-v1 Image Variables
+      - name: Generate ${{ matrix.image_tag }} Image Variables
         run: |
           ls
           IFS='-'
-          read -a strarr <<< "airflow:2.4.3-python3.7-base-v1"
-          echo "airflow:2.4.3-python3.7-base-v1"
-          len=$((${#strarr[*]}-3))
-          sep_arr=${strarr[*]:2:len}
-          file_name=$(echo "$sep_arr" | sed 's/ /-/g')
-          echo "dockerfile="Dockerfile.$file_name"" >> $GITHUB_ENV 
+          echo "dockerfile=Dockerfile" >> $GITHUB_ENV
+          #read -a strarr <<< "${{ matrix.image_tag }}"
+          #echo "${{ matrix.image_tag }}"
+          #len=$((${#strarr[*]}-3))
+          #sep_arr=${strarr[*]:2:len}
+          #file_name=$(echo "$sep_arr" | sed 's/ /-/g')
+          #echo "dockerfile="Dockerfile.$file_name"" >> $GITHUB_ENV 
           #echo "dockerfile=Dockerfile.$file_name" >> $GITHUB_ENV
           #echo "dockerfile name: $dockerfile"
           #echo "airflow_tag=$(echo ${strarr[*]::2} | sed 's/ /-/g')" >> $GITHUB_ENV
           #echo "airflow tag: $airflow_tag"
-          echo "image tag: airflow:2.4.3-python3.7-base-v1"
+          echo "image tag: ${{ matrix.image_tag }}"
       - run: |
           echo "dockerfile name: ${{ env.dockerfile }}"
           echo "airflow tag: ${{ env.airflow_tag }}"
