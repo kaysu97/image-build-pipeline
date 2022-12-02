@@ -27,6 +27,7 @@ jobs:
         run: |
           echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_OUTPUT
           echo "image_list=$(cat base_image_list.txt)" >> $GITHUB_ENV
+          echo "dockerfile=Dockerfile" >> $GITHUB_ENV
       - run: |
           echo "image_list: $image_list"
           
@@ -42,6 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Generate airflow:2.4.3-python3.7-base-v1 Image Variables
+        id: a
         run: |
           ls
           IFS='-'
