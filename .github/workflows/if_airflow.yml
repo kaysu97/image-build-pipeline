@@ -43,8 +43,8 @@ jobs:
       - name: Generate airflow:2.4.3-python3.7-base-v1 Image Variables
         id: a
         run: |
-          ls
-          IFS='-'
+          #ls
+          #IFS='-'
           echo "dockerfile1=Dockerfile" >> $GITHUB_ENV
           #read -a strarr <<< "airflow:2.4.3-python3.7-base-v1"
           #echo "${{ matrix.image_tag }}"
