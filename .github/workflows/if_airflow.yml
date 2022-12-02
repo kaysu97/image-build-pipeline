@@ -34,20 +34,19 @@ jobs:
 
   Base_Image_Build_Push:
     needs: Generate_Image_Tag
-    strategy:
-      matrix:
-        image_tag: ${{fromJSON(needs.Generate_Image_Tag.outputs.image_list)}}
+    # strategy:
+    #   matrix:
+    #     image_tag: ${{fromJSON(needs.Generate_Image_Tag.outputs.image_list)}}
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-      - name: Generate ${{ matrix.image_tag }} Image Variables
-        working-directory: base
+      - name: Generate airflow:2.4.3-python3.7-base-v1 Image Variables
         run: |
           ls
           IFS='-'
-          read -a strarr <<< "${{ matrix.image_tag }}"
-          echo "${{ matrix.image_tag }}"
+          read -a strarr <<< "airflow:2.4.3-python3.7-base-v1"
+          echo "airflow:2.4.3-python3.7-base-v1"
           len=$((${#strarr[*]}-3))
           sep_arr=${strarr[*]:2:len}
           file_name=$(echo "$sep_arr" | sed 's/ /-/g')
@@ -56,16 +55,16 @@ jobs:
           #echo "dockerfile name: $dockerfile"
           #echo "airflow_tag=$(echo ${strarr[*]::2} | sed 's/ /-/g')" >> $GITHUB_ENV
           #echo "airflow tag: $airflow_tag"
-          echo "image tag: ${{ matrix.image_tag }}"
+          echo "image tag: airflow:2.4.3-python3.7-base-v1"
       - run: |
           echo "dockerfile name: ${{ env.dockerfile }}"
           echo "airflow tag: ${{ env.airflow_tag }}"
 
-      - name: ${{ matrix.image_tag }} Image Build
-        working-directory: base
-        run: |
-          docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}" \
-          --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
+      # - name: ${{ matrix.image_tag }} Image Build
+      #   working-directory: base
+      #   run: |
+      #     docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}" \
+      #     --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag"
 
       # - name: Run Trivy vulnerability scanner
       #   uses: aquasecurity/trivy-action@master
@@ -84,7 +83,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
 
-      - name: ${{ matrix.image_tag }} Image Push
-        working-directory: base
-        run: |
-          docker push "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}"
+      # - name: ${{ matrix.image_tag }} Image Push
+      #   working-directory: base
+      #   run: |
+      #     docker push "$IMAGE_REGISTRY"/"${{ matrix.image_tag }}"
