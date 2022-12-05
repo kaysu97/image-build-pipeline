@@ -5,8 +5,8 @@ USER root
 WORKDIR /app
 COPY base-apt-pkgs.txt .
 RUN apt-get update \
-  && xargs apt-get install -y <base-apt-pkgs.txt \
-  && if [ ${PYTHON_VERSION} = "python3.9" ]; then \
+  && xargs apt-get install -y <base-apt-pkgs.txt 
+RUN if [ ${PYTHON_VERSION} = "python3.9" ]; then \
       git clone https://github.com/edenhill/librdkafka \
       && cd librdkafka \
       && ./configure \
@@ -19,8 +19,9 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-RUN chown -R 1001:1001 /app
 USER airflow
 COPY base-requirements.txt .
 RUN pip install -r base-requirements.txt --no-cache-dir
+USER root
 RUN cd / && rm -rf /app
+USER airflow
