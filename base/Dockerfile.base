@@ -1,15 +1,15 @@
-ARG PYTHON_VERSION=PYTHON_VERSION
+ARG TAG_PYTHON_VERSION=TAG_PYTHON_VERSION
 ARG AIRFLOW_IMAGE_TAG=AIRFLOW_IMAGE_TAG
 FROM apache/airflow:${AIRFLOW_IMAGE_TAG}
-ENV PYTHON_VERSION=${PYTHON_VERSION}
+ENV TAG_PYTHON_VERSION=${TAG_PYTHON_VERSION}
 USER root
 WORKDIR /app
 COPY base-apt-pkgs.txt .
 
 RUN apt-get update \
   && xargs apt-get install -y <base-apt-pkgs.txt 
-RUN echo "${PYTHON_VERSION}" \
-  && if [ ${PYTHON_VERSION} = "python3.9" ]; then \
+RUN echo "${TAG_PYTHON_VERSION}" \
+  && if [ ${TAG_PYTHON_VERSION} = "python3.9" ]; then \
       apt-get install -y librdkafka-dev \
       $$ git clone https://github.com/edenhill/librdkafka \
       && cd librdkafka \
