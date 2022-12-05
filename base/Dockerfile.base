@@ -2,21 +2,25 @@ ARG PYTHON_VERSION=PYTHON_VERSION
 ARG AIRFLOW_IMAGE_TAG=AIRFLOW_IMAGE_TAG
 FROM apache/airflow:${AIRFLOW_IMAGE_TAG}
 USER root
+WORKDIR /app
 RUN apt-get update \
-  && apt-get install -y libldap2-dev libsasl2-dev libspatialindex-dev \
-     gcc g++ slapd ldap-utils tox lcov valgrind libspatialindex6 libspatialindex-c6 \
-     python3-dev libpq-dev lftp \
+  && xargs apt-get install -y <base-apt-pkgs.txt \
   && if [ ${PYTHON_VERSION} = "python3.9" ]; then \
-      apt-get install -y librdkafka-dev; \
+      git clone https://github.com/edenhill/librdkafka \
+      && mkdir librdkafka/ \
+      && cd librdkafka \
+      && ./configure \
+      && make \
+      && make install \
+      && ldconfig \
+      && cd /app \
     fi \
   && apt-get autoremove -yqq --purge \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+RUN chown airflow:airflow /app
 USER airflow
-WORKDIR /app
 COPY base-requirements.txt .
 RUN pip install -r base-requirements.txt --no-cache-dir
-USER root
 RUN cd / && rm -rf /app
-USER airflow
