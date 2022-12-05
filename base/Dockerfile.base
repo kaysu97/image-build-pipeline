@@ -13,7 +13,7 @@ RUN apt-get update \
       && make \
       && make install \
       && ldconfig \
-      && cd /app \
+      && cd /app; \
   fi \
   && apt-get autoremove -yqq --purge \
   && apt-get clean \
