@@ -60,7 +60,7 @@ jobs:
       - name: ${{ matrix.image_tag }} Image Build
         working-directory: base
         run: |
-          docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"airflow:${{ matrix.image_tag }}" \
+          docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"airflow:${{ matrix.image_tag }}" --progress=plain --no-cache \
           --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag" \
           --build-arg PYTHON_VERSION="$python_version"
 
