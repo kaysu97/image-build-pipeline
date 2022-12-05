@@ -11,13 +11,13 @@ RUN apt-get update \
 RUN echo "${TAG_PYTHON_VERSION}" \
   && if [ ${TAG_PYTHON_VERSION} == "python3.9" ]; then \
       apt-get install -y librdkafka-dev \
-      $$ git clone https://github.com/edenhill/librdkafka \
-      && cd librdkafka \
-      && ./configure \
-      && make \
-      && make install \
-      && echo $(which librdkafka) \
-      && cd /app; \
+      # $$ git clone https://github.com/edenhill/librdkafka \
+      # && cd librdkafka \
+      # && ./configure \
+      # && make \
+      # && make install \
+      # && echo $(which librdkafka) \
+      # && cd /app; \
   fi \
   && apt-get autoremove -yqq --purge \
   && apt-get clean \
