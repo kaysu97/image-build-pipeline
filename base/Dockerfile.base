@@ -10,7 +10,7 @@ RUN apt-get update \
   && xargs apt-get install -y <base-apt-pkgs.txt 
 RUN echo "${TAG_PYTHON_VERSION}" \
   && if [ ${TAG_PYTHON_VERSION} == "python3.9" ]; then \
-      apt-get install -y librdkafka-dev \
+      apt-get install -y librdkafka-dev; \
       # $$ git clone https://github.com/edenhill/librdkafka \
       # && cd librdkafka \
       # && ./configure \
