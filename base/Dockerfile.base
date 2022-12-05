@@ -5,16 +5,16 @@ USER root
 WORKDIR /app
 COPY base-apt-pkgs.txt .
 RUN apt-get update \
-  && xargs apt-get install -y <base-apt-pkgs.txt
-RUN if [ ${PYTHON_VERSION} = "python3.9" ]; then \
-      git clone https://github.com/edenhill/librdkafka \
+  && xargs apt-get install -y <base-apt-pkgs.txt \
+  && if [ ${PYTHON_VERSION} = "python3.9" ]; then \
+      git clone https://github.com/edenhill/librdkafka; \
       # && cd librdkafka \
       # && ./configure \
       # && make \
       # && make install \
       # && ldconfig \
       # && cd /app; \
-    fi \
+  fi \
   && apt-get autoremove -yqq --purge \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
