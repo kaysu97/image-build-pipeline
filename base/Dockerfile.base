@@ -3,6 +3,7 @@ ARG AIRFLOW_IMAGE_TAG=AIRFLOW_IMAGE_TAG
 FROM apache/airflow:${AIRFLOW_IMAGE_TAG}
 USER root
 WORKDIR /app
+COPY base-apt-pkgs.txt .
 RUN apt-get update \
   && xargs apt-get install -y <base-apt-pkgs.txt \
   # && if [ ${PYTHON_VERSION} = "python3.9" ]; then \
