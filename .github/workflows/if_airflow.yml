@@ -53,16 +53,16 @@ jobs:
           echo "image tag: ${{ matrix.image_tag }}"
           echo "python_version=${strarr[1]}" >> $GITHUB_ENV
       - run: |
-          echo "dockerfile name: ${{ env.dockerfile1 }}"
-          echo "airflow tag: ${{ env.airflow_tag }}"
-          echo "python version: ${{ env.python_version }}"
+          echo "dockerfile name: $dockerfile"
+          echo "airflow tag: $airflow_tag"
+          echo "python version: $python_version"
 
       - name: ${{ matrix.image_tag }} Image Build
         working-directory: base
         run: |
           docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"airflow:${{ matrix.image_tag }}" \
           --build-arg AIRFLOW_IMAGE_TAG="$airflow_tag" \
-          --build-arg PYTHON_VERSION="${{ env.python_version }}"
+          --build-arg PYTHON_VERSION="$python_version"
 
       # - name: Run Trivy vulnerability scanner
       #   uses: aquasecurity/trivy-action@master

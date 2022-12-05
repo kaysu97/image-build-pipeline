@@ -4,9 +4,10 @@ FROM apache/airflow:${AIRFLOW_IMAGE_TAG}
 USER root
 WORKDIR /app
 COPY base-apt-pkgs.txt .
+ENV PYTHON_VERSION=${PYTHON_VERSION}
 RUN apt-get update \
   && xargs apt-get install -y <base-apt-pkgs.txt 
-RUN if [ ${PYTHON_VERSION} = "python3.9" ]; then \
+RUN if [ "$PYTHON_VERSION" = "python3.9" ]; then \
       apt-get install -y librdkafka-dev \
       $$ git clone https://github.com/edenhill/librdkafka \
       && cd librdkafka \
