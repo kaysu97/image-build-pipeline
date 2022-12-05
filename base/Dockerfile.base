@@ -7,13 +7,12 @@ RUN apt-get update \
   && xargs apt-get install -y <base-apt-pkgs.txt \
   && if [ ${PYTHON_VERSION} = "python3.9" ]; then \
       git clone https://github.com/edenhill/librdkafka \
-      && mkdir librdkafka/ \
-      && cd librdkafka \
-      && ./configure \
-      && make \
-      && make install \
-      && ldconfig \
-      && cd /app \
+      # && cd librdkafka \
+      # && ./configure \
+      # && make \
+      # && make install \
+      # && ldconfig \
+      # && cd /app; \
     fi \
   && apt-get autoremove -yqq --purge \
   && apt-get clean \
