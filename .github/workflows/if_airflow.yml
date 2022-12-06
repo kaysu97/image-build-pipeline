@@ -70,7 +70,7 @@ jobs:
         with:
           scan-type: image
           image-ref: ${{ env.IMAGE_REGISTRY }}/airflow:${{ matrix.image_tag }}
-          format: 'table'
+          format: 'sarif'
           output: ${{ matrix.image_tag }}-trivy-results.sarif
           exit-code: '1'
           ignore-unfixed: true
