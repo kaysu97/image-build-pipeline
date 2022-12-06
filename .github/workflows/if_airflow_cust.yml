@@ -10,7 +10,7 @@ on:
   #     - completed
 
 env:
-  BASE_IMAGE_REGISTRY: coolcool97
+  IMAGE_REGISTRY: coolcool97
 
 jobs:
   Generate_Image_Tag:
@@ -59,7 +59,7 @@ jobs:
         run: |
           export BUILDKIT_PROGRESS=plain
           docker build . -f "$dockerfile" -t "$IMAGE_REGISTRY"/"airflow:${{ matrix.image_tag }}" \
-          --build-arg BASE_IMAGE_REGISTRY="$BASE_IMAGE_REGISTRY" \
+          --build-arg IMAGE_REGISTRY="$IMAGE_REGISTRY" \
           --build-arg IMAGE_TYPE="$image_type"
 
       - name: Run Trivy vulnerability scanner
