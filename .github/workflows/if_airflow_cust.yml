@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - "image-build/**"
-  # workflow_run:
-  #   workflows: ["airflow base image build"]
-  #   types: 
-  #     - completed
+  workflow_run:
+    workflows: ["airflow base image build"]
+    types: 
+      - completed
 
 env:
   IMAGE_REGISTRY: coolcool97
