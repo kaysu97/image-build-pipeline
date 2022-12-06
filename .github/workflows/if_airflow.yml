@@ -31,6 +31,10 @@ jobs:
           echo "image_list: $image_list"
           
   Base_Image_Build_Push:
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
     needs: Generate_Image_Tag
     strategy:
       fail-fast: false
@@ -71,10 +75,16 @@ jobs:
           scan-type: image
           image-ref: ${{ env.IMAGE_REGISTRY }}/airflow:${{ matrix.image_tag }}
           format: 'table'
+          output: ${{ matrix.image_tag }}-trivy-results.sarif
           # exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ matrix.image_tag }}-trivy-results.sarif
 
       - name: Login to Docker Hub Registry
         uses: docker/login-action@v2
