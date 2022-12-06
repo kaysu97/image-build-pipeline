@@ -31,6 +31,7 @@ jobs:
   Image_Build_Push:
     needs: Generate_Image_Tag
     strategy:
+      max-parallel: 1
       fail-fast: false
       max-parallel: 1
       matrix:
