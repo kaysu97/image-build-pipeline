@@ -1,10 +1,8 @@
-libldap2-dev 
 libsasl2-dev 
 libspatialindex-dev
 gcc 
 g++ 
 slapd 
-ldap-utils 
 tox 
 lcov 
 valgrind 
@@ -12,4 +10,3 @@ libspatialindex6
 libspatialindex-c6
 python3-dev 
 libpq-dev 
-lftp
