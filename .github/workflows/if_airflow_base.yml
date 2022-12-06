@@ -44,7 +44,8 @@ jobs:
           strarr=($(echo "${{ matrix.image_tag }}" | sed 's/-/ /g'))
           len=$((${#strarr[*]}-3))
           sep_arr=${strarr[*]:2:len}
-          echo "image_type=$(echo \"$sep_arr\" | sed 's/ /-/g')" >> $GITHUB_ENV
+          image_type=$(echo \"$sep_arr\" | sed 's/ /-/g')
+          echo "image_type=$image_type" >> $GITHUB_ENV
           echo "dockerfile=Dockerfile.$image_type" >> $GITHUB_ENV 
           echo "airflow_tag=$(echo ${strarr[*]::2} | sed 's/ /-/g')" >> $GITHUB_ENV
           echo "image tag: ${{ matrix.image_tag }}"
