@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - "image-build/**"
-  workflow_run:
-    workflows: ["airflow base image build"]
-    types: 
-      - completed
+  # workflow_run:
+  #   workflows: ["airflow base image build"]
+  #   types: 
+  #     - completed
 
 env:
   BASE_IMAGE_REGISTRY: coolcool97
@@ -29,10 +29,10 @@ jobs:
           echo "image_list: $image_list"
           
   Image_Build_Push:
-    max-parallel: 1
     needs: Generate_Image_Tag
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         image_tag: ${{fromJSON(needs.Generate_Image_Tag.outputs.image_list)}}
     runs-on: ubuntu-latest
